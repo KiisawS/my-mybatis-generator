@@ -22,6 +22,9 @@
             <!-- 说是1.3.3新增的 JavaBean类注释，但是无效o(╯□╰)o -->
             <property name="addRemarkComments" value="true"/>
 
+            <!-- 自定义（扩展）注释日期格式，默认为 yyyy-MM-dd HH:mm:ss -->
+            <!--<property name="dateFormatPattern" value="yyyy-MM-dd"/>-->
+
         </commentGenerator>
 
         <!-- 数据库链接URL、用户名、密码 -->
@@ -34,13 +37,16 @@
         <javaTypeResolver type="com.kiisaws.my.resolver.MyTypeResolver"/>
 
         <!-- 生成模型的包名和位置 -->
-        <javaModelGenerator targetPackage="com.kiisaws.domain" targetProject="../mybatis-generator-execute/src/main/java" />
+        <javaModelGenerator targetPackage="com.kiisaws.domain"
+                            targetProject="../mybatis-generator-execute/src/main/java" />
 
         <!-- 生成的映射文件报名和位置 -->
-        <sqlMapGenerator targetPackage="mapper" targetProject="../mybatis-generator-execute/src/main/resources" />
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="../mybatis-generator-execute/src/main/resources" />
 
         <!-- 生成DAO的包名和位置 -->
-        <javaClientGenerator targetPackage="com.kiisaws.mapper" targetProject="../mybatis-generator-execute/src/main/java" type="XMLMAPPER" />
+        <javaClientGenerator targetPackage="com.kiisaws.mapper"
+                             targetProject="../mybatis-generator-execute/src/main/java" type="XMLMAPPER" />
 
         <!--要生成的那些表(更改tableName 和domainObjectName 就可以了) -->
         <!--<table schema="my-mybatis-generator" tableName="Test" domainObjectName="Test" enableCountByExample="false" enableUpdateByExample="false"-->

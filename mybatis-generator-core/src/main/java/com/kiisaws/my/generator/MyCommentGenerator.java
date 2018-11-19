@@ -7,6 +7,11 @@ import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.internal.DefaultCommentGenerator;
+import org.mybatis.generator.internal.util.StringUtility;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * 重写mybatis-generator注释代码规则
@@ -14,6 +19,36 @@ import org.mybatis.generator.internal.DefaultCommentGenerator;
  * @author KiisawS
  */
 public class MyCommentGenerator extends DefaultCommentGenerator implements CommentGenerator {
+
+
+    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    private boolean suppressDate = false;
+    /**
+     * 日期格式化
+     */
+    private String dateFormatPattern = DEFAULT_DATE_FORMAT;
+
+    private String dateString;
+
+    @Override
+    public void addConfigurationProperties(Properties properties) {
+        super.addConfigurationProperties(properties);
+        this.suppressDate = StringUtility.isTrue(properties.getProperty("suppressDate"));
+        if (StringUtility.stringHasValue(properties.getProperty("dateFormatPattern"))){
+            dateFormatPattern = properties.getProperty("dateFormatPattern");
+            SimpleDateFormat sdf = new SimpleDateFormat(dateFormatPattern);
+            dateString = sdf.format(new Date());
+        }
+    }
+
+    @Override
+    protected String getDateString() {
+        if (suppressDate) {
+            return dateString;
+        }
+        return null;
+    }
 
     /**
      * 实体类字段注释
@@ -43,10 +78,28 @@ public class MyCommentGenerator extends DefaultCommentGenerator implements Comme
         field.addJavaDocLine(" */");
     }
 
+    /**
+     * java文件注释，文件顶部，package上面
+     *
+     * @param compilationUnit
+     */
+    @Override
+    public void addJavaFileComment(CompilationUnit compilationUnit) {
+//        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+//        compilationUnit.addFileCommentLine("/*");
+//        compilationUnit.addFileCommentLine("*");
+//        compilationUnit.addFileCommentLine("* "+compilationUnit.getType().getShortName()+".java");
+//        compilationUnit.addFileCommentLine("* Copyright(C) 2017-2020 ***公司");
+//        compilationUnit.addFileCommentLine("* @date "+sdf.format(new Date())+"");
+//        compilationUnit.addFileCommentLine("*/");
+    }
+
+
     @Override
     public void addModelClassComment(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         topLevelClass.addAnnotation("@Data");
         topLevelClass.addJavaDocLine("/*****/");
+        topLevelClass.addImportedType(FullyQualifiedJavaType.getNewArrayListInstance());
     }
 
     /**
